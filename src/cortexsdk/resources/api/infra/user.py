@@ -150,7 +150,7 @@ class UserResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
         """
-        Create Api Key
+        Delete User
 
         Args:
           extra_headers: Send extra headers
@@ -297,7 +297,7 @@ class AsyncUserResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> object:
         """
-        Create Api Key
+        Delete User
 
         Args:
           extra_headers: Send extra headers
