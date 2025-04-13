@@ -34,8 +34,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/stainless-sdks/cortex-amq-python"
-Repository = "https://github.com/stainless-sdks/cortex-amq-python"
+Homepage = "https://github.com/armandmcqueen/cortex-py-sdk"
+Repository = "https://github.com/armandmcqueen/cortex-py-sdk"
 
 
 [tool.rye]
@@ -121,7 +121,7 @@ path = "README.md"
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
 # replace relative links with absolute links
 pattern = '\[(.+?)\]\(((?!https?://)\S+?)\)'
-replacement = '[\1](https://github.com/stainless-sdks/cortex-amq-python/tree/main/\g<2>)'
+replacement = '[\1](https://github.com/armandmcqueen/cortex-py-sdk/tree/main/\g<2>)'
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
