@@ -21,12 +21,12 @@ import pytest
 from respx import MockRouter
 from pydantic import ValidationError
 
-from cortex_amq import CortexAmq, AsyncCortexAmq, APIResponseValidationError
-from cortex_amq._types import Omit
-from cortex_amq._models import BaseModel, FinalRequestOptions
-from cortex_amq._constants import RAW_RESPONSE_HEADER
-from cortex_amq._exceptions import APIStatusError, CortexAmqError, APITimeoutError, APIResponseValidationError
-from cortex_amq._base_client import (
+from cortex_py_sdk import Cortex, AsyncCortex, APIResponseValidationError
+from cortex_py_sdk._types import Omit
+from cortex_py_sdk._models import BaseModel, FinalRequestOptions
+from cortex_py_sdk._constants import RAW_RESPONSE_HEADER
+from cortex_py_sdk._exceptions import CortexError, APIStatusError, APITimeoutError, APIResponseValidationError
+from cortex_py_sdk._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
     BaseClient,
@@ -49,7 +49,7 @@ def _low_retry_timeout(*_args: Any, **_kwargs: Any) -> float:
     return 0.1
 
 
-def _get_open_connections(client: CortexAmq | AsyncCortexAmq) -> int:
+def _get_open_connections(client: Cortex | AsyncCortex) -> int:
     transport = client._client._transport
     assert isinstance(transport, httpx.HTTPTransport) or isinstance(transport, httpx.AsyncHTTPTransport)
 
@@ -57,8 +57,8 @@ def _get_open_connections(client: CortexAmq | AsyncCortexAmq) -> int:
     return len(pool._requests)
 
 
-class TestCortexAmq:
-    client = CortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+class TestCortex:
+    client = Cortex(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
     @pytest.mark.respx(base_url=base_url)
     def test_raw_response(self, respx_mock: MockRouter) -> None:
@@ -105,7 +105,7 @@ class TestCortexAmq:
         assert isinstance(self.client.timeout, httpx.Timeout)
 
     def test_copy_default_headers(self) -> None:
-        client = CortexAmq(
+        client = Cortex(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
@@ -139,7 +139,7 @@ class TestCortexAmq:
             client.copy(set_default_headers={}, default_headers={"X-Foo": "Bar"})
 
     def test_copy_default_query(self) -> None:
-        client = CortexAmq(
+        client = Cortex(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
@@ -230,10 +230,10 @@ class TestCortexAmq:
                         # to_raw_response_wrapper leaks through the @functools.wraps() decorator.
                         #
                         # removing the decorator fixes the leak for reasons we don't understand.
-                        "cortex_amq/_legacy_response.py",
-                        "cortex_amq/_response.py",
+                        "cortex_py_sdk/_legacy_response.py",
+                        "cortex_py_sdk/_response.py",
                         # pydantic.BaseModel.model_dump || pydantic.BaseModel.dict leak memory for some reason.
-                        "cortex_amq/_compat.py",
+                        "cortex_py_sdk/_compat.py",
                         # Standard library leaks we don't care about.
                         "/logging/__init__.py",
                     ]
@@ -264,9 +264,7 @@ class TestCortexAmq:
         assert timeout == httpx.Timeout(100.0)
 
     def test_client_timeout_option(self) -> None:
-        client = CortexAmq(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
-        )
+        client = Cortex(base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0))
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -275,7 +273,7 @@ class TestCortexAmq:
     def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         with httpx.Client(timeout=None) as http_client:
-            client = CortexAmq(
+            client = Cortex(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -285,7 +283,7 @@ class TestCortexAmq:
 
         # no timeout given to the httpx client should not use the httpx default
         with httpx.Client() as http_client:
-            client = CortexAmq(
+            client = Cortex(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -295,7 +293,7 @@ class TestCortexAmq:
 
         # explicitly passing the default timeout currently results in it being ignored
         with httpx.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
-            client = CortexAmq(
+            client = Cortex(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -306,7 +304,7 @@ class TestCortexAmq:
     async def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             async with httpx.AsyncClient() as http_client:
-                CortexAmq(
+                Cortex(
                     base_url=base_url,
                     api_key=api_key,
                     _strict_response_validation=True,
@@ -314,14 +312,14 @@ class TestCortexAmq:
                 )
 
     def test_default_headers_option(self) -> None:
-        client = CortexAmq(
+        client = Cortex(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
-        client2 = CortexAmq(
+        client2 = Cortex(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -335,17 +333,17 @@ class TestCortexAmq:
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
 
     def test_validate_headers(self) -> None:
-        client = CortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = Cortex(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("X-API-Key") == api_key
 
-        with pytest.raises(CortexAmqError):
-            with update_env(**{"CORTEX_AMQ_API_KEY": Omit()}):
-                client2 = CortexAmq(base_url=base_url, api_key=None, _strict_response_validation=True)
+        with pytest.raises(CortexError):
+            with update_env(**{"CORTEX_API_KEY": Omit()}):
+                client2 = Cortex(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
-        client = CortexAmq(
+        client = Cortex(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -459,7 +457,7 @@ class TestCortexAmq:
         params = dict(request.url.params)
         assert params == {"foo": "2"}
 
-    def test_multipart_repeating_array(self, client: CortexAmq) -> None:
+    def test_multipart_repeating_array(self, client: Cortex) -> None:
         request = client._build_request(
             FinalRequestOptions.construct(
                 method="get",
@@ -546,7 +544,7 @@ class TestCortexAmq:
         assert response.foo == 2
 
     def test_base_url_setter(self) -> None:
-        client = CortexAmq(base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True)
+        client = Cortex(base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True)
         assert client.base_url == "https://example.com/from_init/"
 
         client.base_url = "https://example.com/from_setter"  # type: ignore[assignment]
@@ -554,15 +552,15 @@ class TestCortexAmq:
         assert client.base_url == "https://example.com/from_setter/"
 
     def test_base_url_env(self) -> None:
-        with update_env(CORTEX_AMQ_BASE_URL="http://localhost:5000/from/env"):
-            client = CortexAmq(api_key=api_key, _strict_response_validation=True)
+        with update_env(CORTEX_BASE_URL="http://localhost:5000/from/env"):
+            client = Cortex(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
-            CortexAmq(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
-            CortexAmq(
+            Cortex(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            Cortex(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -571,7 +569,7 @@ class TestCortexAmq:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_trailing_slash(self, client: CortexAmq) -> None:
+    def test_base_url_trailing_slash(self, client: Cortex) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -584,8 +582,8 @@ class TestCortexAmq:
     @pytest.mark.parametrize(
         "client",
         [
-            CortexAmq(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
-            CortexAmq(
+            Cortex(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            Cortex(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -594,7 +592,7 @@ class TestCortexAmq:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_no_trailing_slash(self, client: CortexAmq) -> None:
+    def test_base_url_no_trailing_slash(self, client: Cortex) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -607,8 +605,8 @@ class TestCortexAmq:
     @pytest.mark.parametrize(
         "client",
         [
-            CortexAmq(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
-            CortexAmq(
+            Cortex(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            Cortex(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -617,7 +615,7 @@ class TestCortexAmq:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_absolute_request_url(self, client: CortexAmq) -> None:
+    def test_absolute_request_url(self, client: Cortex) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -628,7 +626,7 @@ class TestCortexAmq:
         assert request.url == "https://myapi.com/foo"
 
     def test_copied_client_does_not_close_http(self) -> None:
-        client = CortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = Cortex(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not client.is_closed()
 
         copied = client.copy()
@@ -639,7 +637,7 @@ class TestCortexAmq:
         assert not client.is_closed()
 
     def test_client_context_manager(self) -> None:
-        client = CortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = Cortex(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         with client as c2:
             assert c2 is client
             assert not c2.is_closed()
@@ -660,7 +658,7 @@ class TestCortexAmq:
 
     def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            CortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None))
+            Cortex(base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None))
 
     @pytest.mark.respx(base_url=base_url)
     def test_received_text_for_expected_json(self, respx_mock: MockRouter) -> None:
@@ -669,12 +667,12 @@ class TestCortexAmq:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = CortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        strict_client = Cortex(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             strict_client.get("/foo", cast_to=Model)
 
-        client = CortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        client = Cortex(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -702,14 +700,14 @@ class TestCortexAmq:
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = CortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = Cortex(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
-    @mock.patch("cortex_amq._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("cortex_py_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=httpx.TimeoutException("Test timeout error"))
@@ -723,7 +721,7 @@ class TestCortexAmq:
 
         assert _get_open_connections(self.client) == 0
 
-    @mock.patch("cortex_amq._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("cortex_py_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.get("/api/infra/locked-room/admin").mock(return_value=httpx.Response(500))
@@ -738,12 +736,12 @@ class TestCortexAmq:
         assert _get_open_connections(self.client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("cortex_amq._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("cortex_py_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     def test_retries_taken(
         self,
-        client: CortexAmq,
+        client: Cortex,
         failures_before_success: int,
         failure_mode: Literal["status", "exception"],
         respx_mock: MockRouter,
@@ -769,10 +767,10 @@ class TestCortexAmq:
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("cortex_amq._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("cortex_py_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_omit_retry_count_header(
-        self, client: CortexAmq, failures_before_success: int, respx_mock: MockRouter
+        self, client: Cortex, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = client.with_options(max_retries=4)
 
@@ -794,10 +792,10 @@ class TestCortexAmq:
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("cortex_amq._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("cortex_py_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_overwrite_retry_count_header(
-        self, client: CortexAmq, failures_before_success: int, respx_mock: MockRouter
+        self, client: Cortex, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = client.with_options(max_retries=4)
 
@@ -819,8 +817,8 @@ class TestCortexAmq:
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
 
-class TestAsyncCortexAmq:
-    client = AsyncCortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+class TestAsyncCortex:
+    client = AsyncCortex(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
@@ -869,7 +867,7 @@ class TestAsyncCortexAmq:
         assert isinstance(self.client.timeout, httpx.Timeout)
 
     def test_copy_default_headers(self) -> None:
-        client = AsyncCortexAmq(
+        client = AsyncCortex(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
@@ -903,7 +901,7 @@ class TestAsyncCortexAmq:
             client.copy(set_default_headers={}, default_headers={"X-Foo": "Bar"})
 
     def test_copy_default_query(self) -> None:
-        client = AsyncCortexAmq(
+        client = AsyncCortex(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
@@ -994,10 +992,10 @@ class TestAsyncCortexAmq:
                         # to_raw_response_wrapper leaks through the @functools.wraps() decorator.
                         #
                         # removing the decorator fixes the leak for reasons we don't understand.
-                        "cortex_amq/_legacy_response.py",
-                        "cortex_amq/_response.py",
+                        "cortex_py_sdk/_legacy_response.py",
+                        "cortex_py_sdk/_response.py",
                         # pydantic.BaseModel.model_dump || pydantic.BaseModel.dict leak memory for some reason.
-                        "cortex_amq/_compat.py",
+                        "cortex_py_sdk/_compat.py",
                         # Standard library leaks we don't care about.
                         "/logging/__init__.py",
                     ]
@@ -1028,7 +1026,7 @@ class TestAsyncCortexAmq:
         assert timeout == httpx.Timeout(100.0)
 
     async def test_client_timeout_option(self) -> None:
-        client = AsyncCortexAmq(
+        client = AsyncCortex(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
@@ -1039,7 +1037,7 @@ class TestAsyncCortexAmq:
     async def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         async with httpx.AsyncClient(timeout=None) as http_client:
-            client = AsyncCortexAmq(
+            client = AsyncCortex(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -1049,7 +1047,7 @@ class TestAsyncCortexAmq:
 
         # no timeout given to the httpx client should not use the httpx default
         async with httpx.AsyncClient() as http_client:
-            client = AsyncCortexAmq(
+            client = AsyncCortex(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -1059,7 +1057,7 @@ class TestAsyncCortexAmq:
 
         # explicitly passing the default timeout currently results in it being ignored
         async with httpx.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
-            client = AsyncCortexAmq(
+            client = AsyncCortex(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -1070,7 +1068,7 @@ class TestAsyncCortexAmq:
     def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             with httpx.Client() as http_client:
-                AsyncCortexAmq(
+                AsyncCortex(
                     base_url=base_url,
                     api_key=api_key,
                     _strict_response_validation=True,
@@ -1078,14 +1076,14 @@ class TestAsyncCortexAmq:
                 )
 
     def test_default_headers_option(self) -> None:
-        client = AsyncCortexAmq(
+        client = AsyncCortex(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
-        client2 = AsyncCortexAmq(
+        client2 = AsyncCortex(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -1099,17 +1097,17 @@ class TestAsyncCortexAmq:
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
 
     def test_validate_headers(self) -> None:
-        client = AsyncCortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncCortex(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("X-API-Key") == api_key
 
-        with pytest.raises(CortexAmqError):
-            with update_env(**{"CORTEX_AMQ_API_KEY": Omit()}):
-                client2 = AsyncCortexAmq(base_url=base_url, api_key=None, _strict_response_validation=True)
+        with pytest.raises(CortexError):
+            with update_env(**{"CORTEX_API_KEY": Omit()}):
+                client2 = AsyncCortex(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
-        client = AsyncCortexAmq(
+        client = AsyncCortex(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1223,7 +1221,7 @@ class TestAsyncCortexAmq:
         params = dict(request.url.params)
         assert params == {"foo": "2"}
 
-    def test_multipart_repeating_array(self, async_client: AsyncCortexAmq) -> None:
+    def test_multipart_repeating_array(self, async_client: AsyncCortex) -> None:
         request = async_client._build_request(
             FinalRequestOptions.construct(
                 method="get",
@@ -1310,7 +1308,7 @@ class TestAsyncCortexAmq:
         assert response.foo == 2
 
     def test_base_url_setter(self) -> None:
-        client = AsyncCortexAmq(
+        client = AsyncCortex(
             base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
         )
         assert client.base_url == "https://example.com/from_init/"
@@ -1320,17 +1318,17 @@ class TestAsyncCortexAmq:
         assert client.base_url == "https://example.com/from_setter/"
 
     def test_base_url_env(self) -> None:
-        with update_env(CORTEX_AMQ_BASE_URL="http://localhost:5000/from/env"):
-            client = AsyncCortexAmq(api_key=api_key, _strict_response_validation=True)
+        with update_env(CORTEX_BASE_URL="http://localhost:5000/from/env"):
+            client = AsyncCortex(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncCortexAmq(
+            AsyncCortex(
                 base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            AsyncCortexAmq(
+            AsyncCortex(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -1339,7 +1337,7 @@ class TestAsyncCortexAmq:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_trailing_slash(self, client: AsyncCortexAmq) -> None:
+    def test_base_url_trailing_slash(self, client: AsyncCortex) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1352,10 +1350,10 @@ class TestAsyncCortexAmq:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncCortexAmq(
+            AsyncCortex(
                 base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            AsyncCortexAmq(
+            AsyncCortex(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -1364,7 +1362,7 @@ class TestAsyncCortexAmq:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_no_trailing_slash(self, client: AsyncCortexAmq) -> None:
+    def test_base_url_no_trailing_slash(self, client: AsyncCortex) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1377,10 +1375,10 @@ class TestAsyncCortexAmq:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncCortexAmq(
+            AsyncCortex(
                 base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            AsyncCortexAmq(
+            AsyncCortex(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -1389,7 +1387,7 @@ class TestAsyncCortexAmq:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_absolute_request_url(self, client: AsyncCortexAmq) -> None:
+    def test_absolute_request_url(self, client: AsyncCortex) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1400,7 +1398,7 @@ class TestAsyncCortexAmq:
         assert request.url == "https://myapi.com/foo"
 
     async def test_copied_client_does_not_close_http(self) -> None:
-        client = AsyncCortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncCortex(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not client.is_closed()
 
         copied = client.copy()
@@ -1412,7 +1410,7 @@ class TestAsyncCortexAmq:
         assert not client.is_closed()
 
     async def test_client_context_manager(self) -> None:
-        client = AsyncCortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncCortex(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         async with client as c2:
             assert c2 is client
             assert not c2.is_closed()
@@ -1434,7 +1432,7 @@ class TestAsyncCortexAmq:
 
     async def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            AsyncCortexAmq(
+            AsyncCortex(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None)
             )
 
@@ -1446,12 +1444,12 @@ class TestAsyncCortexAmq:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = AsyncCortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        strict_client = AsyncCortex(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             await strict_client.get("/foo", cast_to=Model)
 
-        client = AsyncCortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        client = AsyncCortex(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = await client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -1480,14 +1478,14 @@ class TestAsyncCortexAmq:
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     @pytest.mark.asyncio
     async def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = AsyncCortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncCortex(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
-    @mock.patch("cortex_amq._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("cortex_py_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=httpx.TimeoutException("Test timeout error"))
@@ -1501,7 +1499,7 @@ class TestAsyncCortexAmq:
 
         assert _get_open_connections(self.client) == 0
 
-    @mock.patch("cortex_amq._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("cortex_py_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
         respx_mock.get("/api/infra/locked-room/admin").mock(return_value=httpx.Response(500))
@@ -1516,13 +1514,13 @@ class TestAsyncCortexAmq:
         assert _get_open_connections(self.client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("cortex_amq._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("cortex_py_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     async def test_retries_taken(
         self,
-        async_client: AsyncCortexAmq,
+        async_client: AsyncCortex,
         failures_before_success: int,
         failure_mode: Literal["status", "exception"],
         respx_mock: MockRouter,
@@ -1548,11 +1546,11 @@ class TestAsyncCortexAmq:
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("cortex_amq._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("cortex_py_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     async def test_omit_retry_count_header(
-        self, async_client: AsyncCortexAmq, failures_before_success: int, respx_mock: MockRouter
+        self, async_client: AsyncCortex, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = async_client.with_options(max_retries=4)
 
@@ -1574,11 +1572,11 @@ class TestAsyncCortexAmq:
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("cortex_amq._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("cortex_py_sdk._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
     async def test_overwrite_retry_count_header(
-        self, async_client: AsyncCortexAmq, failures_before_success: int, respx_mock: MockRouter
+        self, async_client: AsyncCortex, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = async_client.with_options(max_retries=4)
 
@@ -1610,8 +1608,8 @@ class TestAsyncCortexAmq:
         import nest_asyncio
         import threading
 
-        from cortex_amq._utils import asyncify
-        from cortex_amq._base_client import get_platform
+        from cortex_py_sdk._utils import asyncify
+        from cortex_py_sdk._base_client import get_platform
 
         async def test_main() -> None:
             result = await asyncify(get_platform)()

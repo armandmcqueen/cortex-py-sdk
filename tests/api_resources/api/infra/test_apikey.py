@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
-from cortex_amq import CortexAmq, AsyncCortexAmq
 from tests.utils import assert_matches_type
-from cortex_amq.types.api.infra import ApikeyCreateResponse
+from cortex_py_sdk import Cortex, AsyncCortex
+from cortex_py_sdk.types.api.infra import ApikeyCreateResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -19,7 +19,7 @@ class TestApikey:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_create(self, client: CortexAmq) -> None:
+    def test_method_create(self, client: Cortex) -> None:
         apikey = client.api.infra.apikey.create(
             description="description",
             user_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -28,7 +28,7 @@ class TestApikey:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_create(self, client: CortexAmq) -> None:
+    def test_raw_response_create(self, client: Cortex) -> None:
         response = client.api.infra.apikey.with_raw_response.create(
             description="description",
             user_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -41,7 +41,7 @@ class TestApikey:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_create(self, client: CortexAmq) -> None:
+    def test_streaming_response_create(self, client: Cortex) -> None:
         with client.api.infra.apikey.with_streaming_response.create(
             description="description",
             user_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -56,7 +56,7 @@ class TestApikey:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_delete(self, client: CortexAmq) -> None:
+    def test_method_delete(self, client: Cortex) -> None:
         apikey = client.api.infra.apikey.delete(
             "token",
         )
@@ -64,7 +64,7 @@ class TestApikey:
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_delete(self, client: CortexAmq) -> None:
+    def test_raw_response_delete(self, client: Cortex) -> None:
         response = client.api.infra.apikey.with_raw_response.delete(
             "token",
         )
@@ -76,7 +76,7 @@ class TestApikey:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_delete(self, client: CortexAmq) -> None:
+    def test_streaming_response_delete(self, client: Cortex) -> None:
         with client.api.infra.apikey.with_streaming_response.delete(
             "token",
         ) as response:
@@ -90,7 +90,7 @@ class TestApikey:
 
     @pytest.mark.skip()
     @parametrize
-    def test_path_params_delete(self, client: CortexAmq) -> None:
+    def test_path_params_delete(self, client: Cortex) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `token` but received ''"):
             client.api.infra.apikey.with_raw_response.delete(
                 "",
@@ -102,7 +102,7 @@ class TestAsyncApikey:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_create(self, async_client: AsyncCortexAmq) -> None:
+    async def test_method_create(self, async_client: AsyncCortex) -> None:
         apikey = await async_client.api.infra.apikey.create(
             description="description",
             user_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -111,7 +111,7 @@ class TestAsyncApikey:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_create(self, async_client: AsyncCortexAmq) -> None:
+    async def test_raw_response_create(self, async_client: AsyncCortex) -> None:
         response = await async_client.api.infra.apikey.with_raw_response.create(
             description="description",
             user_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -124,7 +124,7 @@ class TestAsyncApikey:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_create(self, async_client: AsyncCortexAmq) -> None:
+    async def test_streaming_response_create(self, async_client: AsyncCortex) -> None:
         async with async_client.api.infra.apikey.with_streaming_response.create(
             description="description",
             user_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -139,7 +139,7 @@ class TestAsyncApikey:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_delete(self, async_client: AsyncCortexAmq) -> None:
+    async def test_method_delete(self, async_client: AsyncCortex) -> None:
         apikey = await async_client.api.infra.apikey.delete(
             "token",
         )
@@ -147,7 +147,7 @@ class TestAsyncApikey:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_delete(self, async_client: AsyncCortexAmq) -> None:
+    async def test_raw_response_delete(self, async_client: AsyncCortex) -> None:
         response = await async_client.api.infra.apikey.with_raw_response.delete(
             "token",
         )
@@ -159,7 +159,7 @@ class TestAsyncApikey:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_delete(self, async_client: AsyncCortexAmq) -> None:
+    async def test_streaming_response_delete(self, async_client: AsyncCortex) -> None:
         async with async_client.api.infra.apikey.with_streaming_response.delete(
             "token",
         ) as response:
@@ -173,7 +173,7 @@ class TestAsyncApikey:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_path_params_delete(self, async_client: AsyncCortexAmq) -> None:
+    async def test_path_params_delete(self, async_client: AsyncCortex) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `token` but received ''"):
             await async_client.api.infra.apikey.with_raw_response.delete(
                 "",

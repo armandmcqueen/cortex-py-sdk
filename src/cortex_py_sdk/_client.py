@@ -26,7 +26,7 @@ from ._utils import (
 from ._version import __version__
 from .resources import healthz
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from ._exceptions import APIStatusError, CortexAmqError
+from ._exceptions import CortexError, APIStatusError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
@@ -34,23 +34,14 @@ from ._base_client import (
 )
 from .resources.api import api
 
-__all__ = [
-    "Timeout",
-    "Transport",
-    "ProxiesTypes",
-    "RequestOptions",
-    "CortexAmq",
-    "AsyncCortexAmq",
-    "Client",
-    "AsyncClient",
-]
+__all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Cortex", "AsyncCortex", "Client", "AsyncClient"]
 
 
-class CortexAmq(SyncAPIClient):
+class Cortex(SyncAPIClient):
     api: api.APIResource
     healthz: healthz.HealthzResource
-    with_raw_response: CortexAmqWithRawResponse
-    with_streaming_response: CortexAmqWithStreamedResponse
+    with_raw_response: CortexWithRawResponse
+    with_streaming_response: CortexWithStreamedResponse
 
     # client options
     api_key: str
@@ -78,22 +69,22 @@ class CortexAmq(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous CortexAmq client instance.
+        """Construct a new synchronous Cortex client instance.
 
-        This automatically infers the `api_key` argument from the `CORTEX_AMQ_API_KEY` environment variable if it is not provided.
+        This automatically infers the `api_key` argument from the `CORTEX_API_KEY` environment variable if it is not provided.
         """
         if api_key is None:
-            api_key = os.environ.get("CORTEX_AMQ_API_KEY")
+            api_key = os.environ.get("CORTEX_API_KEY")
         if api_key is None:
-            raise CortexAmqError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the CORTEX_AMQ_API_KEY environment variable"
+            raise CortexError(
+                "The api_key client option must be set either by passing api_key to the client or by setting the CORTEX_API_KEY environment variable"
             )
         self.api_key = api_key
 
         if base_url is None:
-            base_url = os.environ.get("CORTEX_AMQ_BASE_URL")
+            base_url = os.environ.get("CORTEX_BASE_URL")
         if base_url is None:
-            base_url = f"https://api.example.com"
+            base_url = f"http://cortex-server.fly.dev/"
 
         super().__init__(
             version=__version__,
@@ -108,8 +99,8 @@ class CortexAmq(SyncAPIClient):
 
         self.api = api.APIResource(self)
         self.healthz = healthz.HealthzResource(self)
-        self.with_raw_response = CortexAmqWithRawResponse(self)
-        self.with_streaming_response = CortexAmqWithStreamedResponse(self)
+        self.with_raw_response = CortexWithRawResponse(self)
+        self.with_streaming_response = CortexWithStreamedResponse(self)
 
     @property
     @override
@@ -216,11 +207,11 @@ class CortexAmq(SyncAPIClient):
         return APIStatusError(err_msg, response=response, body=body)
 
 
-class AsyncCortexAmq(AsyncAPIClient):
+class AsyncCortex(AsyncAPIClient):
     api: api.AsyncAPIResource
     healthz: healthz.AsyncHealthzResource
-    with_raw_response: AsyncCortexAmqWithRawResponse
-    with_streaming_response: AsyncCortexAmqWithStreamedResponse
+    with_raw_response: AsyncCortexWithRawResponse
+    with_streaming_response: AsyncCortexWithStreamedResponse
 
     # client options
     api_key: str
@@ -248,22 +239,22 @@ class AsyncCortexAmq(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async AsyncCortexAmq client instance.
+        """Construct a new async AsyncCortex client instance.
 
-        This automatically infers the `api_key` argument from the `CORTEX_AMQ_API_KEY` environment variable if it is not provided.
+        This automatically infers the `api_key` argument from the `CORTEX_API_KEY` environment variable if it is not provided.
         """
         if api_key is None:
-            api_key = os.environ.get("CORTEX_AMQ_API_KEY")
+            api_key = os.environ.get("CORTEX_API_KEY")
         if api_key is None:
-            raise CortexAmqError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the CORTEX_AMQ_API_KEY environment variable"
+            raise CortexError(
+                "The api_key client option must be set either by passing api_key to the client or by setting the CORTEX_API_KEY environment variable"
             )
         self.api_key = api_key
 
         if base_url is None:
-            base_url = os.environ.get("CORTEX_AMQ_BASE_URL")
+            base_url = os.environ.get("CORTEX_BASE_URL")
         if base_url is None:
-            base_url = f"https://api.example.com"
+            base_url = f"http://cortex-server.fly.dev/"
 
         super().__init__(
             version=__version__,
@@ -278,8 +269,8 @@ class AsyncCortexAmq(AsyncAPIClient):
 
         self.api = api.AsyncAPIResource(self)
         self.healthz = healthz.AsyncHealthzResource(self)
-        self.with_raw_response = AsyncCortexAmqWithRawResponse(self)
-        self.with_streaming_response = AsyncCortexAmqWithStreamedResponse(self)
+        self.with_raw_response = AsyncCortexWithRawResponse(self)
+        self.with_streaming_response = AsyncCortexWithStreamedResponse(self)
 
     @property
     @override
@@ -386,30 +377,30 @@ class AsyncCortexAmq(AsyncAPIClient):
         return APIStatusError(err_msg, response=response, body=body)
 
 
-class CortexAmqWithRawResponse:
-    def __init__(self, client: CortexAmq) -> None:
+class CortexWithRawResponse:
+    def __init__(self, client: Cortex) -> None:
         self.api = api.APIResourceWithRawResponse(client.api)
         self.healthz = healthz.HealthzResourceWithRawResponse(client.healthz)
 
 
-class AsyncCortexAmqWithRawResponse:
-    def __init__(self, client: AsyncCortexAmq) -> None:
+class AsyncCortexWithRawResponse:
+    def __init__(self, client: AsyncCortex) -> None:
         self.api = api.AsyncAPIResourceWithRawResponse(client.api)
         self.healthz = healthz.AsyncHealthzResourceWithRawResponse(client.healthz)
 
 
-class CortexAmqWithStreamedResponse:
-    def __init__(self, client: CortexAmq) -> None:
+class CortexWithStreamedResponse:
+    def __init__(self, client: Cortex) -> None:
         self.api = api.APIResourceWithStreamingResponse(client.api)
         self.healthz = healthz.HealthzResourceWithStreamingResponse(client.healthz)
 
 
-class AsyncCortexAmqWithStreamedResponse:
-    def __init__(self, client: AsyncCortexAmq) -> None:
+class AsyncCortexWithStreamedResponse:
+    def __init__(self, client: AsyncCortex) -> None:
         self.api = api.AsyncAPIResourceWithStreamingResponse(client.api)
         self.healthz = healthz.AsyncHealthzResourceWithStreamingResponse(client.healthz)
 
 
-Client = CortexAmq
+Client = Cortex
 
-AsyncClient = AsyncCortexAmq
+AsyncClient = AsyncCortex

@@ -4,8 +4,8 @@ from typing import Sequence
 
 import pytest
 
-from cortex_amq._types import FileTypes
-from cortex_amq._utils import extract_files
+from cortex_py_sdk._types import FileTypes
+from cortex_py_sdk._utils import extract_files
 
 
 def test_removes_files_from_input() -> None:

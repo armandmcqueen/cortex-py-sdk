@@ -4,7 +4,7 @@ from urllib.parse import unquote
 
 import pytest
 
-from cortex_amq._qs import Querystring, stringify
+from cortex_py_sdk._qs import Querystring, stringify
 
 
 def test_empty() -> None:
