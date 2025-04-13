@@ -9,6 +9,7 @@ import pytest
 
 from cortexsdk import Cortex, AsyncCortex
 from tests.utils import assert_matches_type
+from cortexsdk.types import HealthzCheckResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -20,7 +21,7 @@ class TestHealthz:
     @parametrize
     def test_method_check(self, client: Cortex) -> None:
         healthz = client.healthz.check()
-        assert_matches_type(object, healthz, path=["response"])
+        assert_matches_type(HealthzCheckResponse, healthz, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -30,7 +31,7 @@ class TestHealthz:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         healthz = response.parse()
-        assert_matches_type(object, healthz, path=["response"])
+        assert_matches_type(HealthzCheckResponse, healthz, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -40,7 +41,7 @@ class TestHealthz:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             healthz = response.parse()
-            assert_matches_type(object, healthz, path=["response"])
+            assert_matches_type(HealthzCheckResponse, healthz, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -52,7 +53,7 @@ class TestAsyncHealthz:
     @parametrize
     async def test_method_check(self, async_client: AsyncCortex) -> None:
         healthz = await async_client.healthz.check()
-        assert_matches_type(object, healthz, path=["response"])
+        assert_matches_type(HealthzCheckResponse, healthz, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -62,7 +63,7 @@ class TestAsyncHealthz:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         healthz = await response.parse()
-        assert_matches_type(object, healthz, path=["response"])
+        assert_matches_type(HealthzCheckResponse, healthz, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
@@ -72,6 +73,6 @@ class TestAsyncHealthz:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             healthz = await response.parse()
-            assert_matches_type(object, healthz, path=["response"])
+            assert_matches_type(HealthzCheckResponse, healthz, path=["response"])
 
         assert cast(Any, response.is_closed) is True
