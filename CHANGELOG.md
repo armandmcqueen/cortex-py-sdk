@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.3 (2025-04-13)
+
+Full Changelog: [v0.1.0-alpha.2...v0.1.0-alpha.3](https://github.com/armandmcqueen/cortex-py-sdk/compare/v0.1.0-alpha.2...v0.1.0-alpha.3)
+
+### Features
+
+* **api:** api update ([27f8c25](https://github.com/armandmcqueen/cortex-py-sdk/commit/27f8c25154435f18316ee9d20f54da260a3e9159))
+
 ## 0.1.0-alpha.2 (2025-04-13)
 
 Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/armandmcqueen/cortex-py-sdk/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
