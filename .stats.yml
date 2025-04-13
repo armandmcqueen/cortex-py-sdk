@@ -1,4 +1,4 @@
 configured_endpoints: 12
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/armand%2Fcortex-amq-021cf6407ca9e4b66e4e79b70266e599c54acb252ac517794f8d7d03fc2fd93f.yml
-openapi_spec_hash: 3f964706bfdd2959e0230d99558fe69d
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/armand%2Fcortex-amq-83f1d3652a161a82cbd295b861661aa92ef42367cbb27ee56b8db5bc10865af0.yml
+openapi_spec_hash: 3202b2434b4054872eceab613af56669
 config_hash: 38714952303975578365349dfc219445
