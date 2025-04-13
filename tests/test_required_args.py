@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from cortex_py_sdk._utils import required_args
+from cortexsdk._utils import required_args
 
 
 def test_too_many_positional_params() -> None:
