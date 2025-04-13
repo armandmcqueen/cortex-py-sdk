@@ -73,12 +73,12 @@ _setup_logging()
 # Update the __module__ attribute for exported symbols so that
 # error messages point to this module instead of the module
 # it was originally defined in, e.g.
-# cortex_py_sdk._exceptions.NotFoundError -> cortex_py_sdk.NotFoundError
+# cortexsdk._exceptions.NotFoundError -> cortexsdk.NotFoundError
 __locals = locals()
 for __name in __all__:
     if not __name.startswith("__"):
         try:
-            __locals[__name].__module__ = "cortex_py_sdk"
+            __locals[__name].__module__ = "cortexsdk"
         except (TypeError, AttributeError):
             # Some of our exported symbols are builtins which we can't set attributes for.
             pass

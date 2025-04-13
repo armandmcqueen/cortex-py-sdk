@@ -5,8 +5,8 @@ from typing import Iterator, AsyncIterator
 import httpx
 import pytest
 
-from cortex_py_sdk import Cortex, AsyncCortex
-from cortex_py_sdk._streaming import Stream, AsyncStream, ServerSentEvent
+from cortexsdk import Cortex, AsyncCortex
+from cortexsdk._streaming import Stream, AsyncStream, ServerSentEvent
 
 
 @pytest.mark.asyncio

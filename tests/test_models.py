@@ -7,9 +7,9 @@ import pytest
 import pydantic
 from pydantic import Field
 
-from cortex_py_sdk._utils import PropertyInfo
-from cortex_py_sdk._compat import PYDANTIC_V2, parse_obj, model_dump, model_json
-from cortex_py_sdk._models import BaseModel, construct_type
+from cortexsdk._utils import PropertyInfo
+from cortexsdk._compat import PYDANTIC_V2, parse_obj, model_dump, model_json
+from cortexsdk._models import BaseModel, construct_type
 
 
 class BasicModel(BaseModel):

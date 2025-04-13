@@ -7,8 +7,8 @@ from typing import Any, cast
 
 import pytest
 
+from cortexsdk import Cortex, AsyncCortex
 from tests.utils import assert_matches_type
-from cortex_py_sdk import Cortex, AsyncCortex
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
