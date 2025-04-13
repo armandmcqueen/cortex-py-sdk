@@ -81,4 +81,4 @@ from cortexsdk.types import HealthzCheckResponse
 
 Methods:
 
-- <code title="get /healthz">client.healthz.<a href="./src/cortexsdk/resources/healthz.py">check</a>() -> <a href="./src/cortexsdk/types/healthz_check_response.py">object</a></code>
+- <code title="get /healthz">client.healthz.<a href="./src/cortexsdk/resources/healthz.py">check</a>() -> <a href="./src/cortexsdk/types/healthz_check_response.py">HealthzCheckResponse</a></code>

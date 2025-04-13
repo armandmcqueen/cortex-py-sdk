@@ -14,6 +14,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
+from ..types.healthz_check_response import HealthzCheckResponse
 
 __all__ = ["HealthzResource", "AsyncHealthzResource"]
 
@@ -25,7 +26,7 @@ class HealthzResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/cortex-amq-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/armandmcqueen/cortex-py-sdk#accessing-raw-response-data-eg-headers
         """
         return HealthzResourceWithRawResponse(self)
 
@@ -34,7 +35,7 @@ class HealthzResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/cortex-amq-python#with_streaming_response
+        For more information, see https://www.github.com/armandmcqueen/cortex-py-sdk#with_streaming_response
         """
         return HealthzResourceWithStreamingResponse(self)
 
@@ -47,14 +48,14 @@ class HealthzResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> object:
+    ) -> HealthzCheckResponse:
         """Health Check"""
         return self._get(
             "/healthz",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=HealthzCheckResponse,
         )
 
 
@@ -65,7 +66,7 @@ class AsyncHealthzResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/cortex-amq-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/armandmcqueen/cortex-py-sdk#accessing-raw-response-data-eg-headers
         """
         return AsyncHealthzResourceWithRawResponse(self)
 
@@ -74,7 +75,7 @@ class AsyncHealthzResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/cortex-amq-python#with_streaming_response
+        For more information, see https://www.github.com/armandmcqueen/cortex-py-sdk#with_streaming_response
         """
         return AsyncHealthzResourceWithStreamingResponse(self)
 
@@ -87,14 +88,14 @@ class AsyncHealthzResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> object:
+    ) -> HealthzCheckResponse:
         """Health Check"""
         return await self._get(
             "/healthz",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=object,
+            cast_to=HealthzCheckResponse,
         )
 
 
