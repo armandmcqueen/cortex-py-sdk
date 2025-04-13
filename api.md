@@ -23,12 +23,13 @@ Methods:
 Types:
 
 ```python
-from cortexsdk.types.api.infra import ApikeyCreateResponse, ApikeyDeleteResponse
+from cortexsdk.types.api.infra import ApikeyCreateResponse, ApikeyListResponse, ApikeyDeleteResponse
 ```
 
 Methods:
 
 - <code title="post /api/infra/apikey">client.api.infra.apikey.<a href="./src/cortexsdk/resources/api/infra/apikey.py">create</a>(\*\*<a href="src/cortexsdk/types/api/infra/apikey_create_params.py">params</a>) -> <a href="./src/cortexsdk/types/api/infra/apikey_create_response.py">ApikeyCreateResponse</a></code>
+- <code title="get /api/infra/apikey">client.api.infra.apikey.<a href="./src/cortexsdk/resources/api/infra/apikey.py">list</a>() -> <a href="./src/cortexsdk/types/api/infra/apikey_list_response.py">ApikeyListResponse</a></code>
 - <code title="delete /api/infra/apikey/{token}">client.api.infra.apikey.<a href="./src/cortexsdk/resources/api/infra/apikey.py">delete</a>(token) -> <a href="./src/cortexsdk/types/api/infra/apikey_delete_response.py">object</a></code>
 
 ### User

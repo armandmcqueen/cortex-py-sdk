@@ -9,7 +9,7 @@ import pytest
 
 from cortexsdk import Cortex, AsyncCortex
 from tests.utils import assert_matches_type
-from cortexsdk.types.api.infra import ApikeyCreateResponse
+from cortexsdk.types.api.infra import ApikeyListResponse, ApikeyCreateResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -51,6 +51,34 @@ class TestApikey:
 
             apikey = response.parse()
             assert_matches_type(ApikeyCreateResponse, apikey, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_method_list(self, client: Cortex) -> None:
+        apikey = client.api.infra.apikey.list()
+        assert_matches_type(ApikeyListResponse, apikey, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_raw_response_list(self, client: Cortex) -> None:
+        response = client.api.infra.apikey.with_raw_response.list()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        apikey = response.parse()
+        assert_matches_type(ApikeyListResponse, apikey, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    def test_streaming_response_list(self, client: Cortex) -> None:
+        with client.api.infra.apikey.with_streaming_response.list() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            apikey = response.parse()
+            assert_matches_type(ApikeyListResponse, apikey, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -134,6 +162,34 @@ class TestAsyncApikey:
 
             apikey = await response.parse()
             assert_matches_type(ApikeyCreateResponse, apikey, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_method_list(self, async_client: AsyncCortex) -> None:
+        apikey = await async_client.api.infra.apikey.list()
+        assert_matches_type(ApikeyListResponse, apikey, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_raw_response_list(self, async_client: AsyncCortex) -> None:
+        response = await async_client.api.infra.apikey.with_raw_response.list()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        apikey = await response.parse()
+        assert_matches_type(ApikeyListResponse, apikey, path=["response"])
+
+    @pytest.mark.skip()
+    @parametrize
+    async def test_streaming_response_list(self, async_client: AsyncCortex) -> None:
+        async with async_client.api.infra.apikey.with_streaming_response.list() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            apikey = await response.parse()
+            assert_matches_type(ApikeyListResponse, apikey, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
