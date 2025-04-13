@@ -8,15 +8,15 @@ from typing_extensions import Required, Annotated, TypedDict
 
 import pytest
 
-from cortex_amq._types import NOT_GIVEN, Base64FileInput
-from cortex_amq._utils import (
+from cortex_py_sdk._types import NOT_GIVEN, Base64FileInput
+from cortex_py_sdk._utils import (
     PropertyInfo,
     transform as _transform,
     parse_datetime,
     async_transform as _async_transform,
 )
-from cortex_amq._compat import PYDANTIC_V2
-from cortex_amq._models import BaseModel
+from cortex_py_sdk._compat import PYDANTIC_V2
+from cortex_py_sdk._models import BaseModel
 
 _T = TypeVar("_T")
 

@@ -7,14 +7,14 @@ from typing import TYPE_CHECKING, Iterator, AsyncIterator
 import pytest
 from pytest_asyncio import is_async_test
 
-from cortex_amq import CortexAmq, AsyncCortexAmq
+from cortex_py_sdk import Cortex, AsyncCortex
 
 if TYPE_CHECKING:
     from _pytest.fixtures import FixtureRequest
 
 pytest.register_assert_rewrite("tests.utils")
 
-logging.getLogger("cortex_amq").setLevel(logging.DEBUG)
+logging.getLogger("cortex_py_sdk").setLevel(logging.DEBUG)
 
 
 # automatically add `pytest.mark.asyncio()` to all of our async tests
@@ -32,20 +32,20 @@ api_key = "My API Key"
 
 
 @pytest.fixture(scope="session")
-def client(request: FixtureRequest) -> Iterator[CortexAmq]:
+def client(request: FixtureRequest) -> Iterator[Cortex]:
     strict = getattr(request, "param", True)
     if not isinstance(strict, bool):
         raise TypeError(f"Unexpected fixture parameter type {type(strict)}, expected {bool}")
 
-    with CortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=strict) as client:
+    with Cortex(base_url=base_url, api_key=api_key, _strict_response_validation=strict) as client:
         yield client
 
 
 @pytest.fixture(scope="session")
-async def async_client(request: FixtureRequest) -> AsyncIterator[AsyncCortexAmq]:
+async def async_client(request: FixtureRequest) -> AsyncIterator[AsyncCortex]:
     strict = getattr(request, "param", True)
     if not isinstance(strict, bool):
         raise TypeError(f"Unexpected fixture parameter type {type(strict)}, expected {bool}")
 
-    async with AsyncCortexAmq(base_url=base_url, api_key=api_key, _strict_response_validation=strict) as client:
+    async with AsyncCortex(base_url=base_url, api_key=api_key, _strict_response_validation=strict) as client:
         yield client

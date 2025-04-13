@@ -2,7 +2,7 @@ import operator
 from typing import Any
 from typing_extensions import override
 
-from cortex_amq._utils import LazyProxy
+from cortex_py_sdk._utils import LazyProxy
 
 
 class RecursiveLazyProxy(LazyProxy[Any]):

@@ -18,11 +18,11 @@ __all__ = [
 ]
 
 
-class CortexAmqError(Exception):
+class CortexError(Exception):
     pass
 
 
-class APIError(CortexAmqError):
+class APIError(CortexError):
     message: str
     request: httpx.Request
 
