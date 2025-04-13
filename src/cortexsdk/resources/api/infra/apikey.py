@@ -19,6 +19,7 @@ from ...._response import (
 )
 from ...._base_client import make_request_options
 from ....types.api.infra import apikey_create_params
+from ....types.api.infra.apikey_list_response import ApikeyListResponse
 from ....types.api.infra.apikey_create_response import ApikeyCreateResponse
 
 __all__ = ["ApikeyResource", "AsyncApikeyResource"]
@@ -81,6 +82,25 @@ class ApikeyResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=ApikeyCreateResponse,
+        )
+
+    def list(
+        self,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> ApikeyListResponse:
+        """List Api Keys"""
+        return self._get(
+            "/api/infra/apikey",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ApikeyListResponse,
         )
 
     def delete(
@@ -176,6 +196,25 @@ class AsyncApikeyResource(AsyncAPIResource):
             cast_to=ApikeyCreateResponse,
         )
 
+    async def list(
+        self,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> ApikeyListResponse:
+        """List Api Keys"""
+        return await self._get(
+            "/api/infra/apikey",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ApikeyListResponse,
+        )
+
     async def delete(
         self,
         token: str,
@@ -217,6 +256,9 @@ class ApikeyResourceWithRawResponse:
         self.create = to_raw_response_wrapper(
             apikey.create,
         )
+        self.list = to_raw_response_wrapper(
+            apikey.list,
+        )
         self.delete = to_raw_response_wrapper(
             apikey.delete,
         )
@@ -228,6 +270,9 @@ class AsyncApikeyResourceWithRawResponse:
 
         self.create = async_to_raw_response_wrapper(
             apikey.create,
+        )
+        self.list = async_to_raw_response_wrapper(
+            apikey.list,
         )
         self.delete = async_to_raw_response_wrapper(
             apikey.delete,
@@ -241,6 +286,9 @@ class ApikeyResourceWithStreamingResponse:
         self.create = to_streamed_response_wrapper(
             apikey.create,
         )
+        self.list = to_streamed_response_wrapper(
+            apikey.list,
+        )
         self.delete = to_streamed_response_wrapper(
             apikey.delete,
         )
@@ -252,6 +300,9 @@ class AsyncApikeyResourceWithStreamingResponse:
 
         self.create = async_to_streamed_response_wrapper(
             apikey.create,
+        )
+        self.list = async_to_streamed_response_wrapper(
+            apikey.list,
         )
         self.delete = async_to_streamed_response_wrapper(
             apikey.delete,
