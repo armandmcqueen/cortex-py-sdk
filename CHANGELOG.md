@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.0-alpha.4 (2025-04-19)
+
+Full Changelog: [v0.1.0-alpha.3...v0.1.0-alpha.4](https://github.com/armandmcqueen/cortex-py-sdk/compare/v0.1.0-alpha.3...v0.1.0-alpha.4)
+
+### Chores
+
+* **client:** minor internal fixes ([2b6e970](https://github.com/armandmcqueen/cortex-py-sdk/commit/2b6e970d9ba67817791130da0e87d5ab21c05476))
+* **internal:** base client updates ([6a79710](https://github.com/armandmcqueen/cortex-py-sdk/commit/6a79710e7e8ff3257cbbafa56a9a44274e3cedef))
+* **internal:** bump pyright version ([d9fed2b](https://github.com/armandmcqueen/cortex-py-sdk/commit/d9fed2bac7fab8add4533f04aac34f6cf5241681))
+* **internal:** update models test ([f950fef](https://github.com/armandmcqueen/cortex-py-sdk/commit/f950fef051433cf11a2f272370c8440643852dc4))
+* **internal:** update pyright settings ([a1c4151](https://github.com/armandmcqueen/cortex-py-sdk/commit/a1c4151c485a876448071169d792e9c66979eb8f))
+
 ## 0.1.0-alpha.3 (2025-04-13)
 
 Full Changelog: [v0.1.0-alpha.2...v0.1.0-alpha.3](https://github.com/armandmcqueen/cortex-py-sdk/compare/v0.1.0-alpha.2...v0.1.0-alpha.3)
