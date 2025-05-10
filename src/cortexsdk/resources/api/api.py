@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from ... import _resource
 from .public import (
     PublicResource,
     AsyncPublicResource,
@@ -11,7 +12,6 @@ from .public import (
     AsyncPublicResourceWithStreamingResponse,
 )
 from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
 from .experiments import (
     ExperimentsResource,
     AsyncExperimentsResource,
@@ -32,7 +32,7 @@ from .infra.infra import (
 __all__ = ["APIResource", "AsyncAPIResource"]
 
 
-class APIResource(SyncAPIResource):
+class APIResource(_resource.SyncAPIResource):
     @cached_property
     def infra(self) -> InfraResource:
         return InfraResource(self._client)
@@ -65,7 +65,7 @@ class APIResource(SyncAPIResource):
         return APIResourceWithStreamingResponse(self)
 
 
-class AsyncAPIResource(AsyncAPIResource):
+class AsyncAPIResource(_resource.AsyncAPIResource):
     @cached_property
     def infra(self) -> AsyncInfraResource:
         return AsyncInfraResource(self._client)
