@@ -7,16 +7,13 @@
 Types:
 
 ```python
-from cortexsdk.types.api.infra import (
-    LockedRoomRetrieveAdminResponse,
-    LockedRoomRetrieveUserResponse,
-)
+from cortexsdk.types.api.infra import LockedRoomAdminRoomResponse, LockedRoomUserRoomResponse
 ```
 
 Methods:
 
-- <code title="get /api/infra/locked-room/admin">client.api.infra.locked_room.<a href="./src/cortexsdk/resources/api/infra/locked_room.py">retrieve_admin</a>() -> <a href="./src/cortexsdk/types/api/infra/locked_room_retrieve_admin_response.py">object</a></code>
-- <code title="get /api/infra/locked-room/user">client.api.infra.locked_room.<a href="./src/cortexsdk/resources/api/infra/locked_room.py">retrieve_user</a>() -> <a href="./src/cortexsdk/types/api/infra/locked_room_retrieve_user_response.py">object</a></code>
+- <code title="get /api/infra/locked-room/admin">client.api.infra.locked_room.<a href="./src/cortexsdk/resources/api/infra/locked_room.py">admin_room</a>() -> <a href="./src/cortexsdk/types/api/infra/locked_room_admin_room_response.py">object</a></code>
+- <code title="get /api/infra/locked-room/user">client.api.infra.locked_room.<a href="./src/cortexsdk/resources/api/infra/locked_room.py">user_room</a>() -> <a href="./src/cortexsdk/types/api/infra/locked_room_user_room_response.py">object</a></code>
 
 ### Apikey
 
@@ -64,13 +61,25 @@ Methods:
 Types:
 
 ```python
-from cortexsdk.types.api import PublicRetrieveRoomResponse, PublicWhoamiResponse
+from cortexsdk.types.api import PublicPublicRoomResponse, PublicWhoamiResponse
 ```
 
 Methods:
 
-- <code title="get /api/public/room">client.api.public.<a href="./src/cortexsdk/resources/api/public.py">retrieve_room</a>() -> <a href="./src/cortexsdk/types/api/public_retrieve_room_response.py">object</a></code>
+- <code title="get /api/public/room">client.api.public.<a href="./src/cortexsdk/resources/api/public.py">public_room</a>() -> <a href="./src/cortexsdk/types/api/public_public_room_response.py">object</a></code>
 - <code title="get /api/public/whoami">client.api.public.<a href="./src/cortexsdk/resources/api/public.py">whoami</a>() -> <a href="./src/cortexsdk/types/api/public_whoami_response.py">object</a></code>
+
+## Books
+
+Types:
+
+```python
+from cortexsdk.types.api import BookUploadEpubResponse
+```
+
+Methods:
+
+- <code title="post /api/books/epub/upload">client.api.books.<a href="./src/cortexsdk/resources/api/books.py">upload_epub</a>(\*\*<a href="src/cortexsdk/types/api/book_upload_epub_params.py">params</a>) -> <a href="./src/cortexsdk/types/api/book_upload_epub_response.py">object</a></code>
 
 # Healthz
 
