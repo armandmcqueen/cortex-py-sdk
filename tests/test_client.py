@@ -761,7 +761,7 @@ class TestCortex:
 
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=retry_handler)
 
-        response = client.api.infra.locked_room.with_raw_response.retrieve_admin()
+        response = client.api.infra.locked_room.with_raw_response.admin_room()
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -785,7 +785,7 @@ class TestCortex:
 
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=retry_handler)
 
-        response = client.api.infra.locked_room.with_raw_response.retrieve_admin(
+        response = client.api.infra.locked_room.with_raw_response.admin_room(
             extra_headers={"x-stainless-retry-count": Omit()}
         )
 
@@ -810,7 +810,7 @@ class TestCortex:
 
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=retry_handler)
 
-        response = client.api.infra.locked_room.with_raw_response.retrieve_admin(
+        response = client.api.infra.locked_room.with_raw_response.admin_room(
             extra_headers={"x-stainless-retry-count": "42"}
         )
 
@@ -1540,7 +1540,7 @@ class TestAsyncCortex:
 
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=retry_handler)
 
-        response = await client.api.infra.locked_room.with_raw_response.retrieve_admin()
+        response = await client.api.infra.locked_room.with_raw_response.admin_room()
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1565,7 +1565,7 @@ class TestAsyncCortex:
 
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=retry_handler)
 
-        response = await client.api.infra.locked_room.with_raw_response.retrieve_admin(
+        response = await client.api.infra.locked_room.with_raw_response.admin_room(
             extra_headers={"x-stainless-retry-count": Omit()}
         )
 
@@ -1591,7 +1591,7 @@ class TestAsyncCortex:
 
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=retry_handler)
 
-        response = await client.api.infra.locked_room.with_raw_response.retrieve_admin(
+        response = await client.api.infra.locked_room.with_raw_response.admin_room(
             extra_headers={"x-stainless-retry-count": "42"}
         )
 
