@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.1.0-alpha.5 (2025-06-03)
+
+Full Changelog: [v0.1.0-alpha.4...v0.1.0-alpha.5](https://github.com/armandmcqueen/cortex-py-sdk/compare/v0.1.0-alpha.4...v0.1.0-alpha.5)
+
+### Features
+
+* **api:** api update ([457c403](https://github.com/armandmcqueen/cortex-py-sdk/commit/457c403fe09897c69b375507e26e1ff0335da1ab))
+* **client:** add follow_redirects request option ([45bf3de](https://github.com/armandmcqueen/cortex-py-sdk/commit/45bf3de7da3b86083abcd5fd18248da0ead3718c))
+
+
+### Bug Fixes
+
+* **docs/api:** remove references to nonexistent types ([def6a66](https://github.com/armandmcqueen/cortex-py-sdk/commit/def6a6633188dfcb7bbc2e0b221530c937ed78c5))
+
+
+### Chores
+
+* **ci:** fix installation instructions ([3bced28](https://github.com/armandmcqueen/cortex-py-sdk/commit/3bced282de4b4b036e8717c6da8eb5f919304e7f))
+* **docs:** grammar improvements ([73b749c](https://github.com/armandmcqueen/cortex-py-sdk/commit/73b749ce84bc89281ec16d1b606335322a3e262f))
+* **docs:** remove reference to rye shell ([2c6f669](https://github.com/armandmcqueen/cortex-py-sdk/commit/2c6f6694bd3bb8e731bc77fe40c9c7f75df1362e))
+* **internal:** codegen related update ([3e79149](https://github.com/armandmcqueen/cortex-py-sdk/commit/3e79149c2da1b701ea269aa857b4ad31daecce00))
+
 ## 0.1.0-alpha.4 (2025-05-15)
 
 Full Changelog: [v0.1.0-alpha.3...v0.1.0-alpha.4](https://github.com/armandmcqueen/cortex-py-sdk/compare/v0.1.0-alpha.3...v0.1.0-alpha.4)
