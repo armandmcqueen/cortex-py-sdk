@@ -1,6 +1,6 @@
 # Cortex Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/cortexsdk.svg)](https://pypi.org/project/cortexsdk/)
+[![PyPI version](<https://img.shields.io/pypi/v/cortexsdk.svg?label=pypi%20(stable)>)](https://pypi.org/project/cortexsdk/)
 
 The Cortex Python library provides convenient access to the Cortex REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
