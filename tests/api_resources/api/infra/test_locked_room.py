@@ -18,14 +18,14 @@ class TestLockedRoom:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_retrieve_admin(self, client: Cortex) -> None:
-        locked_room = client.api.infra.locked_room.retrieve_admin()
+    def test_method_admin_room(self, client: Cortex) -> None:
+        locked_room = client.api.infra.locked_room.admin_room()
         assert_matches_type(object, locked_room, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_retrieve_admin(self, client: Cortex) -> None:
-        response = client.api.infra.locked_room.with_raw_response.retrieve_admin()
+    def test_raw_response_admin_room(self, client: Cortex) -> None:
+        response = client.api.infra.locked_room.with_raw_response.admin_room()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -34,8 +34,8 @@ class TestLockedRoom:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_retrieve_admin(self, client: Cortex) -> None:
-        with client.api.infra.locked_room.with_streaming_response.retrieve_admin() as response:
+    def test_streaming_response_admin_room(self, client: Cortex) -> None:
+        with client.api.infra.locked_room.with_streaming_response.admin_room() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -46,14 +46,14 @@ class TestLockedRoom:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_retrieve_user(self, client: Cortex) -> None:
-        locked_room = client.api.infra.locked_room.retrieve_user()
+    def test_method_user_room(self, client: Cortex) -> None:
+        locked_room = client.api.infra.locked_room.user_room()
         assert_matches_type(object, locked_room, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_retrieve_user(self, client: Cortex) -> None:
-        response = client.api.infra.locked_room.with_raw_response.retrieve_user()
+    def test_raw_response_user_room(self, client: Cortex) -> None:
+        response = client.api.infra.locked_room.with_raw_response.user_room()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -62,8 +62,8 @@ class TestLockedRoom:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_retrieve_user(self, client: Cortex) -> None:
-        with client.api.infra.locked_room.with_streaming_response.retrieve_user() as response:
+    def test_streaming_response_user_room(self, client: Cortex) -> None:
+        with client.api.infra.locked_room.with_streaming_response.user_room() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -78,14 +78,14 @@ class TestAsyncLockedRoom:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_retrieve_admin(self, async_client: AsyncCortex) -> None:
-        locked_room = await async_client.api.infra.locked_room.retrieve_admin()
+    async def test_method_admin_room(self, async_client: AsyncCortex) -> None:
+        locked_room = await async_client.api.infra.locked_room.admin_room()
         assert_matches_type(object, locked_room, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_retrieve_admin(self, async_client: AsyncCortex) -> None:
-        response = await async_client.api.infra.locked_room.with_raw_response.retrieve_admin()
+    async def test_raw_response_admin_room(self, async_client: AsyncCortex) -> None:
+        response = await async_client.api.infra.locked_room.with_raw_response.admin_room()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -94,8 +94,8 @@ class TestAsyncLockedRoom:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_retrieve_admin(self, async_client: AsyncCortex) -> None:
-        async with async_client.api.infra.locked_room.with_streaming_response.retrieve_admin() as response:
+    async def test_streaming_response_admin_room(self, async_client: AsyncCortex) -> None:
+        async with async_client.api.infra.locked_room.with_streaming_response.admin_room() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -106,14 +106,14 @@ class TestAsyncLockedRoom:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_retrieve_user(self, async_client: AsyncCortex) -> None:
-        locked_room = await async_client.api.infra.locked_room.retrieve_user()
+    async def test_method_user_room(self, async_client: AsyncCortex) -> None:
+        locked_room = await async_client.api.infra.locked_room.user_room()
         assert_matches_type(object, locked_room, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_retrieve_user(self, async_client: AsyncCortex) -> None:
-        response = await async_client.api.infra.locked_room.with_raw_response.retrieve_user()
+    async def test_raw_response_user_room(self, async_client: AsyncCortex) -> None:
+        response = await async_client.api.infra.locked_room.with_raw_response.user_room()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -122,8 +122,8 @@ class TestAsyncLockedRoom:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_retrieve_user(self, async_client: AsyncCortex) -> None:
-        async with async_client.api.infra.locked_room.with_streaming_response.retrieve_user() as response:
+    async def test_streaming_response_user_room(self, async_client: AsyncCortex) -> None:
+        async with async_client.api.infra.locked_room.with_streaming_response.user_room() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
