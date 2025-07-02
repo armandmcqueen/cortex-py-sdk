@@ -1,6 +1,6 @@
 # Cortex Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/cortexsdk.svg)](https://pypi.org/project/cortexsdk/)
+[![PyPI version](<https://img.shields.io/pypi/v/cortexsdk.svg?label=pypi%20(stable)>)](https://pypi.org/project/cortexsdk/)
 
 The Cortex Python library provides convenient access to the Cortex REST API from any Python 3.8+
 application. The library includes type definitions for all request params and response fields,
@@ -20,7 +20,7 @@ pip install git+ssh://git@github.com/armandmcqueen/cortex-py-sdk.git
 ```
 
 > [!NOTE]
-> Once this package is [published to PyPI](https://app.stainless.com/docs/guides/publish), this will become: `pip install --pre cortexsdk`
+> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install --pre cortexsdk`
 
 ## Usage
 
@@ -34,7 +34,7 @@ client = Cortex(
     api_key=os.environ.get("CORTEX_API_KEY"),  # This is the default and can be omitted
 )
 
-response = client.api.infra.locked_room.retrieve_admin()
+response = client.api.infra.locked_room.admin_room()
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -57,13 +57,44 @@ client = AsyncCortex(
 
 
 async def main() -> None:
-    response = await client.api.infra.locked_room.retrieve_admin()
+    response = await client.api.infra.locked_room.admin_room()
 
 
 asyncio.run(main())
 ```
 
 Functionality between the synchronous and asynchronous clients is otherwise identical.
+
+### With aiohttp
+
+By default, the async client uses `httpx` for HTTP requests. However, for improved concurrency performance you may also use `aiohttp` as the HTTP backend.
+
+You can enable this by installing `aiohttp`:
+
+```sh
+# install from the production repo
+pip install 'cortexsdk[aiohttp] @ git+ssh://git@github.com/armandmcqueen/cortex-py-sdk.git'
+```
+
+Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
+
+```python
+import os
+import asyncio
+from cortexsdk import DefaultAioHttpClient
+from cortexsdk import AsyncCortex
+
+
+async def main() -> None:
+    async with AsyncCortex(
+        api_key=os.environ.get("CORTEX_API_KEY"),  # This is the default and can be omitted
+        http_client=DefaultAioHttpClient(),
+    ) as client:
+        response = await client.api.infra.locked_room.admin_room()
+
+
+asyncio.run(main())
+```
 
 ## Using types
 
@@ -73,6 +104,24 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 - Converting to a dictionary, `model.to_dict()`
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
+
+## File uploads
+
+Request parameters that correspond to file uploads can be passed as `bytes`, or a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
+
+```python
+from pathlib import Path
+from cortexsdk import Cortex
+
+client = Cortex()
+
+client.api.books.upload_epub(
+    file=Path("/path/to/file"),
+    name="name",
+)
+```
+
+The async client uses the exact same interface. If you pass a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance, the file contents will be read asynchronously automatically.
 
 ## Handling errors
 
@@ -90,7 +139,7 @@ from cortexsdk import Cortex
 client = Cortex()
 
 try:
-    client.api.infra.locked_room.retrieve_admin()
+    client.api.infra.locked_room.admin_room()
 except cortexsdk.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
@@ -133,13 +182,13 @@ client = Cortex(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).api.infra.locked_room.retrieve_admin()
+client.with_options(max_retries=5).api.infra.locked_room.admin_room()
 ```
 
 ### Timeouts
 
 By default requests time out after 1 minute. You can configure this with a `timeout` option,
-which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
+which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
 
 ```python
 from cortexsdk import Cortex
@@ -156,7 +205,7 @@ client = Cortex(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).api.infra.locked_room.retrieve_admin()
+client.with_options(timeout=5.0).api.infra.locked_room.admin_room()
 ```
 
 On timeout, an `APITimeoutError` is thrown.
@@ -197,10 +246,10 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from cortexsdk import Cortex
 
 client = Cortex()
-response = client.api.infra.locked_room.with_raw_response.retrieve_admin()
+response = client.api.infra.locked_room.with_raw_response.admin_room()
 print(response.headers.get('X-My-Header'))
 
-locked_room = response.parse()  # get the object that `api.infra.locked_room.retrieve_admin()` would have returned
+locked_room = response.parse()  # get the object that `api.infra.locked_room.admin_room()` would have returned
 print(locked_room)
 ```
 
@@ -215,7 +264,7 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.api.infra.locked_room.with_streaming_response.retrieve_admin() as response:
+with client.api.infra.locked_room.with_streaming_response.admin_room() as response:
     print(response.headers.get("X-My-Header"))
 
     for line in response.iter_lines():
