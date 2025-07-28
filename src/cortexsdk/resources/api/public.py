@@ -38,7 +38,7 @@ class PublicResource(SyncAPIResource):
         """
         return PublicResourceWithStreamingResponse(self)
 
-    def public_room(
+    def retrieve_room(
         self,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -97,7 +97,7 @@ class AsyncPublicResource(AsyncAPIResource):
         """
         return AsyncPublicResourceWithStreamingResponse(self)
 
-    async def public_room(
+    async def retrieve_room(
         self,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -140,8 +140,8 @@ class PublicResourceWithRawResponse:
     def __init__(self, public: PublicResource) -> None:
         self._public = public
 
-        self.public_room = to_raw_response_wrapper(
-            public.public_room,
+        self.retrieve_room = to_raw_response_wrapper(
+            public.retrieve_room,
         )
         self.whoami = to_raw_response_wrapper(
             public.whoami,
@@ -152,8 +152,8 @@ class AsyncPublicResourceWithRawResponse:
     def __init__(self, public: AsyncPublicResource) -> None:
         self._public = public
 
-        self.public_room = async_to_raw_response_wrapper(
-            public.public_room,
+        self.retrieve_room = async_to_raw_response_wrapper(
+            public.retrieve_room,
         )
         self.whoami = async_to_raw_response_wrapper(
             public.whoami,
@@ -164,8 +164,8 @@ class PublicResourceWithStreamingResponse:
     def __init__(self, public: PublicResource) -> None:
         self._public = public
 
-        self.public_room = to_streamed_response_wrapper(
-            public.public_room,
+        self.retrieve_room = to_streamed_response_wrapper(
+            public.retrieve_room,
         )
         self.whoami = to_streamed_response_wrapper(
             public.whoami,
@@ -176,8 +176,8 @@ class AsyncPublicResourceWithStreamingResponse:
     def __init__(self, public: AsyncPublicResource) -> None:
         self._public = public
 
-        self.public_room = async_to_streamed_response_wrapper(
-            public.public_room,
+        self.retrieve_room = async_to_streamed_response_wrapper(
+            public.retrieve_room,
         )
         self.whoami = async_to_streamed_response_wrapper(
             public.whoami,

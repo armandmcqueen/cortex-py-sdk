@@ -6,8 +6,8 @@
 
 Methods:
 
-- <code title="get /api/infra/locked-room/admin">client.api.infra.locked_room.<a href="./src/cortexsdk/resources/api/infra/locked_room.py">admin_room</a>() -> object</code>
-- <code title="get /api/infra/locked-room/user">client.api.infra.locked_room.<a href="./src/cortexsdk/resources/api/infra/locked_room.py">user_room</a>() -> object</code>
+- <code title="get /api/infra/locked-room/admin">client.api.infra.locked_room.<a href="./src/cortexsdk/resources/api/infra/locked_room.py">retrieve_admin</a>() -> object</code>
+- <code title="get /api/infra/locked-room/user">client.api.infra.locked_room.<a href="./src/cortexsdk/resources/api/infra/locked_room.py">retrieve_user</a>() -> object</code>
 
 ### Apikey
 
@@ -48,14 +48,8 @@ Methods:
 
 Methods:
 
-- <code title="get /api/public/room">client.api.public.<a href="./src/cortexsdk/resources/api/public.py">public_room</a>() -> object</code>
+- <code title="get /api/public/room">client.api.public.<a href="./src/cortexsdk/resources/api/public.py">retrieve_room</a>() -> object</code>
 - <code title="get /api/public/whoami">client.api.public.<a href="./src/cortexsdk/resources/api/public.py">whoami</a>() -> object</code>
-
-## Books
-
-Methods:
-
-- <code title="post /api/books/epub/upload">client.api.books.<a href="./src/cortexsdk/resources/api/books.py">upload_epub</a>(\*\*<a href="src/cortexsdk/types/api/book_upload_epub_params.py">params</a>) -> object</code>
 
 # Healthz
 
