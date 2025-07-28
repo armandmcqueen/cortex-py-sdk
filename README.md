@@ -80,7 +80,6 @@ pip install 'cortexsdk[aiohttp] @ git+ssh://git@github.com/armandmcqueen/cortex-
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
 
 ```python
-import os
 import asyncio
 from cortexsdk import DefaultAioHttpClient
 from cortexsdk import AsyncCortex
@@ -88,7 +87,7 @@ from cortexsdk import AsyncCortex
 
 async def main() -> None:
     async with AsyncCortex(
-        api_key=os.environ.get("CORTEX_API_KEY"),  # This is the default and can be omitted
+        api_key="My API Key",
         http_client=DefaultAioHttpClient(),
     ) as client:
         response = await client.api.infra.locked_room.admin_room()
