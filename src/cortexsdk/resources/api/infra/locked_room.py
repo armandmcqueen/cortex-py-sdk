@@ -38,7 +38,7 @@ class LockedRoomResource(SyncAPIResource):
         """
         return LockedRoomResourceWithStreamingResponse(self)
 
-    def admin_room(
+    def retrieve_admin(
         self,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -57,7 +57,7 @@ class LockedRoomResource(SyncAPIResource):
             cast_to=object,
         )
 
-    def user_room(
+    def retrieve_user(
         self,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -97,7 +97,7 @@ class AsyncLockedRoomResource(AsyncAPIResource):
         """
         return AsyncLockedRoomResourceWithStreamingResponse(self)
 
-    async def admin_room(
+    async def retrieve_admin(
         self,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -116,7 +116,7 @@ class AsyncLockedRoomResource(AsyncAPIResource):
             cast_to=object,
         )
 
-    async def user_room(
+    async def retrieve_user(
         self,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -140,11 +140,11 @@ class LockedRoomResourceWithRawResponse:
     def __init__(self, locked_room: LockedRoomResource) -> None:
         self._locked_room = locked_room
 
-        self.admin_room = to_raw_response_wrapper(
-            locked_room.admin_room,
+        self.retrieve_admin = to_raw_response_wrapper(
+            locked_room.retrieve_admin,
         )
-        self.user_room = to_raw_response_wrapper(
-            locked_room.user_room,
+        self.retrieve_user = to_raw_response_wrapper(
+            locked_room.retrieve_user,
         )
 
 
@@ -152,11 +152,11 @@ class AsyncLockedRoomResourceWithRawResponse:
     def __init__(self, locked_room: AsyncLockedRoomResource) -> None:
         self._locked_room = locked_room
 
-        self.admin_room = async_to_raw_response_wrapper(
-            locked_room.admin_room,
+        self.retrieve_admin = async_to_raw_response_wrapper(
+            locked_room.retrieve_admin,
         )
-        self.user_room = async_to_raw_response_wrapper(
-            locked_room.user_room,
+        self.retrieve_user = async_to_raw_response_wrapper(
+            locked_room.retrieve_user,
         )
 
 
@@ -164,11 +164,11 @@ class LockedRoomResourceWithStreamingResponse:
     def __init__(self, locked_room: LockedRoomResource) -> None:
         self._locked_room = locked_room
 
-        self.admin_room = to_streamed_response_wrapper(
-            locked_room.admin_room,
+        self.retrieve_admin = to_streamed_response_wrapper(
+            locked_room.retrieve_admin,
         )
-        self.user_room = to_streamed_response_wrapper(
-            locked_room.user_room,
+        self.retrieve_user = to_streamed_response_wrapper(
+            locked_room.retrieve_user,
         )
 
 
@@ -176,9 +176,9 @@ class AsyncLockedRoomResourceWithStreamingResponse:
     def __init__(self, locked_room: AsyncLockedRoomResource) -> None:
         self._locked_room = locked_room
 
-        self.admin_room = async_to_streamed_response_wrapper(
-            locked_room.admin_room,
+        self.retrieve_admin = async_to_streamed_response_wrapper(
+            locked_room.retrieve_admin,
         )
-        self.user_room = async_to_streamed_response_wrapper(
-            locked_room.user_room,
+        self.retrieve_user = async_to_streamed_response_wrapper(
+            locked_room.retrieve_user,
         )

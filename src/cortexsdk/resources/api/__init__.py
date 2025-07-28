@@ -8,14 +8,6 @@ from .api import (
     APIResourceWithStreamingResponse,
     AsyncAPIResourceWithStreamingResponse,
 )
-from .books import (
-    BooksResource,
-    AsyncBooksResource,
-    BooksResourceWithRawResponse,
-    AsyncBooksResourceWithRawResponse,
-    BooksResourceWithStreamingResponse,
-    AsyncBooksResourceWithStreamingResponse,
-)
 from .infra import (
     InfraResource,
     AsyncInfraResource,
@@ -60,12 +52,6 @@ __all__ = [
     "AsyncPublicResourceWithRawResponse",
     "PublicResourceWithStreamingResponse",
     "AsyncPublicResourceWithStreamingResponse",
-    "BooksResource",
-    "AsyncBooksResource",
-    "BooksResourceWithRawResponse",
-    "AsyncBooksResourceWithRawResponse",
-    "BooksResourceWithStreamingResponse",
-    "AsyncBooksResourceWithStreamingResponse",
     "APIResource",
     "AsyncAPIResource",
     "APIResourceWithRawResponse",

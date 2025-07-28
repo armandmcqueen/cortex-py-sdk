@@ -715,7 +715,7 @@ class TestCortex:
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            client.api.infra.locked_room.with_streaming_response.admin_room().__enter__()
+            client.api.infra.locked_room.with_streaming_response.retrieve_admin().__enter__()
 
         assert _get_open_connections(self.client) == 0
 
@@ -725,7 +725,7 @@ class TestCortex:
         respx_mock.get("/api/infra/locked-room/admin").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            client.api.infra.locked_room.with_streaming_response.admin_room().__enter__()
+            client.api.infra.locked_room.with_streaming_response.retrieve_admin().__enter__()
         assert _get_open_connections(self.client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -754,7 +754,7 @@ class TestCortex:
 
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=retry_handler)
 
-        response = client.api.infra.locked_room.with_raw_response.admin_room()
+        response = client.api.infra.locked_room.with_raw_response.retrieve_admin()
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -778,7 +778,7 @@ class TestCortex:
 
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=retry_handler)
 
-        response = client.api.infra.locked_room.with_raw_response.admin_room(
+        response = client.api.infra.locked_room.with_raw_response.retrieve_admin(
             extra_headers={"x-stainless-retry-count": Omit()}
         )
 
@@ -803,7 +803,7 @@ class TestCortex:
 
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=retry_handler)
 
-        response = client.api.infra.locked_room.with_raw_response.admin_room(
+        response = client.api.infra.locked_room.with_raw_response.retrieve_admin(
             extra_headers={"x-stainless-retry-count": "42"}
         )
 
@@ -1534,7 +1534,7 @@ class TestAsyncCortex:
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            await async_client.api.infra.locked_room.with_streaming_response.admin_room().__aenter__()
+            await async_client.api.infra.locked_room.with_streaming_response.retrieve_admin().__aenter__()
 
         assert _get_open_connections(self.client) == 0
 
@@ -1544,7 +1544,7 @@ class TestAsyncCortex:
         respx_mock.get("/api/infra/locked-room/admin").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            await async_client.api.infra.locked_room.with_streaming_response.admin_room().__aenter__()
+            await async_client.api.infra.locked_room.with_streaming_response.retrieve_admin().__aenter__()
         assert _get_open_connections(self.client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -1574,7 +1574,7 @@ class TestAsyncCortex:
 
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=retry_handler)
 
-        response = await client.api.infra.locked_room.with_raw_response.admin_room()
+        response = await client.api.infra.locked_room.with_raw_response.retrieve_admin()
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1599,7 +1599,7 @@ class TestAsyncCortex:
 
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=retry_handler)
 
-        response = await client.api.infra.locked_room.with_raw_response.admin_room(
+        response = await client.api.infra.locked_room.with_raw_response.retrieve_admin(
             extra_headers={"x-stainless-retry-count": Omit()}
         )
 
@@ -1625,7 +1625,7 @@ class TestAsyncCortex:
 
         respx_mock.get("/api/infra/locked-room/admin").mock(side_effect=retry_handler)
 
-        response = await client.api.infra.locked_room.with_raw_response.admin_room(
+        response = await client.api.infra.locked_room.with_raw_response.retrieve_admin(
             extra_headers={"x-stainless-retry-count": "42"}
         )
 

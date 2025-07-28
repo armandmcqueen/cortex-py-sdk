@@ -18,14 +18,14 @@ class TestPublic:
 
     @pytest.mark.skip()
     @parametrize
-    def test_method_public_room(self, client: Cortex) -> None:
-        public = client.api.public.public_room()
+    def test_method_retrieve_room(self, client: Cortex) -> None:
+        public = client.api.public.retrieve_room()
         assert_matches_type(object, public, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    def test_raw_response_public_room(self, client: Cortex) -> None:
-        response = client.api.public.with_raw_response.public_room()
+    def test_raw_response_retrieve_room(self, client: Cortex) -> None:
+        response = client.api.public.with_raw_response.retrieve_room()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -34,8 +34,8 @@ class TestPublic:
 
     @pytest.mark.skip()
     @parametrize
-    def test_streaming_response_public_room(self, client: Cortex) -> None:
-        with client.api.public.with_streaming_response.public_room() as response:
+    def test_streaming_response_retrieve_room(self, client: Cortex) -> None:
+        with client.api.public.with_streaming_response.retrieve_room() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -80,14 +80,14 @@ class TestAsyncPublic:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_method_public_room(self, async_client: AsyncCortex) -> None:
-        public = await async_client.api.public.public_room()
+    async def test_method_retrieve_room(self, async_client: AsyncCortex) -> None:
+        public = await async_client.api.public.retrieve_room()
         assert_matches_type(object, public, path=["response"])
 
     @pytest.mark.skip()
     @parametrize
-    async def test_raw_response_public_room(self, async_client: AsyncCortex) -> None:
-        response = await async_client.api.public.with_raw_response.public_room()
+    async def test_raw_response_retrieve_room(self, async_client: AsyncCortex) -> None:
+        response = await async_client.api.public.with_raw_response.retrieve_room()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -96,8 +96,8 @@ class TestAsyncPublic:
 
     @pytest.mark.skip()
     @parametrize
-    async def test_streaming_response_public_room(self, async_client: AsyncCortex) -> None:
-        async with async_client.api.public.with_streaming_response.public_room() as response:
+    async def test_streaming_response_retrieve_room(self, async_client: AsyncCortex) -> None:
+        async with async_client.api.public.with_streaming_response.retrieve_room() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
